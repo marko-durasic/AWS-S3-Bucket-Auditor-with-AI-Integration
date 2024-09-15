@@ -116,9 +116,17 @@ Sensitive Data   : true
 
 If you find this tool useful and would like to support further development, you can:
 
-- Buy Me a Coffee: [buymeacoffee.com/techmarko](buymeacoffee.com/ddjura)
+
+[![Buy Me a Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=techmarko&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/techmarko)
 
 Your support is greatly appreciated!
+
+## 📫 How to reach me:
+
+  [![Email](https://img.shields.io/badge/Email-ddjura87@gmail.com-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:ddjura87@gmail.com)
+  [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/markodurasic/)
+  [![Website](https://img.shields.io/badge/Website-markodurasic.com-24292e?style=flat-square&logo=githubpages)](https://www.markodurasic.com/)
+  [![Portfolio](https://img.shields.io/badge/Tech%20Portfolio-Linktree-39E09B?style=flat-square&logo=linktree)](https://linktr.ee/techmarko)
 
 ## Contributing
 

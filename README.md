@@ -1,13 +1,15 @@
 # AWS S3 Bucket Auditor with AI Integration
 The **AWS S3 Bucket Auditor** is a Go-based command-line tool that performs a comprehensive security audit of your Amazon S3 buckets. It integrates with AWS Macie to check for sensitive data, providing intelligent insights while ensuring data privacy and security.
 
+<!-- add Demo_Screenshot.png -->
+![Demo Screenshot](Demo_Screenshot.png)
+
 ## Features
 
 - 🔍 **List Buckets**: Displays all S3 buckets in your AWS account.
 - 🔒 **Public Access Check**: Flags buckets that are publicly accessible.
 - 🔐 **Encryption Status**: Indicates whether server-side encryption is enabled.
 - 🔄 **Versioning Status**: Shows if versioning is enabled or disabled.
-- 🌍 **Region Information**: Displays the region where each bucket is located.
 - 🕵️ **Sensitive Data Detection**: Uses AWS Macie to identify buckets that may contain sensitive data.
 - 📊 **Comprehensive Report**: Generates a detailed audit report for security reviews.
 
@@ -53,12 +55,12 @@ While the AWS CLI is powerful, this tool simplifies and automates multiple secur
 
 Ensure that your AWS credentials are properly configured. The AWS SDK for Go will look for credentials in the following order:
 
-1. Environment variables:
+1. **Environment variables:**
     - AWS_ACCESS_KEY_ID
     - AWS_SECRET_ACCESS_KEY
     - AWS_REGION
 
-2. Shared Credentials File (~/.aws/credentials):
+2. **Shared Credentials File (~/.aws/credentials):**
 
     Configure your credentials using the AWS CLI or by manually editing the credentials file.
 
@@ -66,15 +68,88 @@ Ensure that your AWS credentials are properly configured. The AWS SDK for Go wil
     [default]
     aws_access_key_id = YOUR_ACCESS_KEY_ID
     aws_secret_access_key = YOUR_SECRET_ACCESS_KEY
-    region = YOUR_AWS_REGION
+    ```
+3. **Shared Configuration File (~/.aws/config):**
+
+    You can also set the default region in the configuration file.
+
+    ```ini
+    [default]
+    region = us-east-1
     ```
 
-## Permissions
+## Permissions Setup for Macie
 
+First of all make sure that Amazon Macie is enabled in your AWS account.
+
+### S3 Bucket Policy for Findings Bucket
+
+Ensure the S3 bucket used by Macie for storing findings has the following policy:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowMacieToStoreFindings",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "macie.amazonaws.com"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::findings-results/*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:SourceAccount": "YOUR_ACCOUNT_ID"
+                }
+            }
+        },
+        {
+            "Sid": "AllowMacieToUseGetBucketLocation",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "macie.amazonaws.com"
+            },
+            "Action": "s3:GetBucketLocation",
+            "Resource": "arn:aws:s3:::findings-results"
+        }
+    ]
+}
+```
+### KMS Policy for Findings Bucket Encryption
+
+Ensure the KMS key used for encrypting Macie findings has the following policy:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowMacieToUseTheKey",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "macie.amazonaws.com"
+            },
+            "Action": [
+                "kms:GenerateDataKey",
+                "kms:Encrypt"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:SourceAccount": "YOUR_ACCOUNT_ID"
+                }
+            }
+        }
+    ]
+}
+```
+
+### Permissions
 The tool requires the following AWS IAM permissions:
 
 - S3: ListBuckets, GetBucketLocation, GetBucketAcl, GetBucketEncryption, GetBucketVersioning, GetPublicAccessBlock
-- Macie: Permissions to initiate classification jobs and access findings (e.g., macie2:CreateClassificationJob, macie2:GetFindings)
+- Macie: Permissions to initiate classification jobs and access findings
 
 ## Usage
 
@@ -137,7 +212,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Security Considerations
 
-- 🛡️ Data Privacy: The tool sanitizes any sensitive data before processing.
 - 🔑 API Keys: Ensure your AWS credentials are securely stored and not hardcoded.
 - 📜 Compliance: Designed to help with compliance standards like GDPR and HIPAA by identifying buckets that may contain sensitive data.
 
@@ -157,9 +231,11 @@ Feel free to customize and extend the tool:
 
 ## Why This Tool is Unique
 
-- 🤖 AI-Powered Security: Integrates with AWS Macie to provide intelligent insights about sensitive data.
-- 🧪 Comprehensive Auditing: Performs multiple security checks in a single run.
-- ⚡ Performance Optimized: Uses concurrency for efficient processing.
-- 📖 Open Source: Allows the community to contribute and improve the tool.
-- 🎓 Educational Value: Serves as a practical example of integrating AWS services using Go.
+- 🤖 **AI-Powered Security**: Integrates with AWS Macie to provide intelligent insights about sensitive data.
+- 🧪 **Comprehensive Auditing**: Can be extended to perform multiple security checks in a single run.
+- ⚡ **Performance Optimized**: Uses concurrency for efficient processing.
+- 📖 **Open Source**: Allows the community to contribute and improve the tool.
+- 🎓 **Educational Value**: Serves as a practical example of integrating AWS services using Go.
+- 🖥️ **CLI**: Provides a user-friendly CLI for easy interaction. For geeky people like me, who prefer CLI over GUI.
+
 

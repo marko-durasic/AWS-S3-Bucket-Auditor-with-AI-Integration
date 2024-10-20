@@ -1,8 +1,7 @@
 # AWS S3 Bucket Auditor with AI Integration
 The **AWS S3 Bucket Auditor** is a Go-based command-line tool that performs a comprehensive security audit of your Amazon S3 buckets. It integrates with AWS Macie to check for sensitive data, providing intelligent insights while ensuring data privacy and security.
 
-<!-- add Demo_Screenshot.png -->
-![Demo Screenshot](Demo_Screenshot.png)
+![Demo Screenshot](docs/images/Demo_Screenshot.png)
 
 ## Features
 
@@ -239,3 +238,8 @@ Feel free to customize and extend the tool:
 - 🖥️ **CLI**: Provides a user-friendly CLI for easy interaction. For geeky people like me, who prefer CLI over GUI.
 
 
+## Additional Information
+
+- In progress screenshot:
+  
+![In Progress Screenshot](docs/images/In_Progress_Screenshot.png)

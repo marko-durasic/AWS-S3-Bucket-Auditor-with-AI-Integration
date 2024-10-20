@@ -21,3 +21,6 @@
 # Ignore OS-specific files
 .DS_Store
 Thumbs.db
+
+# Don't ignore docs folder
+!docs/

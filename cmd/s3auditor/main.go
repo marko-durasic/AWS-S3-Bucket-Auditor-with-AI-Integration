@@ -17,18 +17,9 @@ import (
 	"github.com/common-nighthawk/go-figure"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
+	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/models"
 	"github.com/schollz/progressbar/v3"
 )
-
-// BucketInfo holds information about an S3 bucket
-type BucketInfo struct {
-	Name             string
-	Region           string
-	IsPublic         bool
-	Encryption       string
-	VersioningStatus string
-	SensitiveData    bool
-}
 
 func main() {
 	// Setup logging to a file and the console
@@ -156,7 +147,7 @@ func auditBucket(cfg aws.Config, s3Client *s3.Client, macieClient *macie2.Client
 	wg.Add(1)
 	go func(bucketName string) {
 		defer wg.Done()
-		bucketInfo := BucketInfo{Name: bucketName}
+		bucketInfo := models.BucketInfo{Name: bucketName}
 
 		color.Cyan("Auditing bucket: %s", bucketName)
 		log.Printf("Auditing bucket: %s", bucketName)
@@ -458,7 +449,7 @@ func checkSensitiveData(cfg aws.Config, macieClient *macie2.Client, bucketName s
 }
 
 // printBucketReport outputs the audit results for one bucket with colors
-func printBucketReport(info BucketInfo) {
+func printBucketReport(info models.BucketInfo) {
 	color.Cyan("\nS3 Bucket Security Audit Report:")
 	color.Cyan("=====================================================================")
 	color.Green("Bucket Name      : %s", info.Name)

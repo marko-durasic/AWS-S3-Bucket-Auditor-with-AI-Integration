@@ -4,6 +4,7 @@
 
 
 ### Steps to Continue
+- Refactor main.go, so it is not so messy, more modular
 - can just have one command and then you enter into a cli "dashboard" where you can select the different options. make it look user friendly
 - move stuff that are kind of hardcoded to environment variables like 40 minutes timeout and name of the bucket we use for macie findings
 - when choosing audit a bucket, we should have option to audit few of them, not just one, and to search by letter, what if there is many buckets

@@ -44,7 +44,7 @@ Security code: 912
 "
 
 echo "Running the S3 Bucket Auditor tool..."
-go build -o s3auditor main.go || { echo "Go build failed!"; exit 1; }
+go build -o s3auditor cmd/s3auditor/main.go || { echo "Go build failed!"; exit 1; }
 ./s3auditor || { echo "S3 Auditor tool failed!"; exit 1; }
 
 # Step 4: Clean up the test S3 buckets and files

@@ -1,2 +1,23 @@
-s3_audit.log
-s3auditor
+# Ignore compiled binary
+/s3auditor
+
+# Ignore any executables without extension
+*
+!*.*
+!*/
+
+# Don't ignore go.mod and go.sum
+!go.mod
+!go.sum
+
+# Ignore common Go build and test files
+*.exe
+*.test
+*.out
+
+# Ignore log files
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db

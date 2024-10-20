@@ -17,6 +17,7 @@ import (
 	"github.com/common-nighthawk/go-figure"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
+	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/awsutils"
 	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/models"
 	"github.com/schollz/progressbar/v3"
 )
@@ -65,36 +66,13 @@ func main() {
 
 		switch result {
 		case "List S3 Buckets":
-			listBuckets(s3Client)
+			awsutils.ListBuckets(s3Client)
 		case "Audit a Bucket":
 			auditBucket(cfg, s3Client, macieClient)
 		case "Exit":
 			color.Green("Goodbye! Stay secure.")
 			os.Exit(0)
 		}
-	}
-}
-
-// listBuckets retrieves a list of all S3 buckets
-func listBuckets(s3Client *s3.Client) {
-	color.Cyan("\nListing S3 Buckets...\n")
-	log.Println("Listing S3 Buckets...")
-	result, err := s3Client.ListBuckets(context.Background(), &s3.ListBucketsInput{})
-	if err != nil {
-		color.Red("Error: Unable to list S3 buckets: %v", err)
-		log.Printf("Error: Unable to list S3 buckets: %v", err)
-		return
-	}
-
-	if len(result.Buckets) == 0 {
-		color.Yellow("No S3 buckets found.\n")
-		log.Println("No S3 buckets found.")
-		return
-	}
-
-	for _, bucket := range result.Buckets {
-		color.Green("Bucket: %s", *bucket.Name)
-		log.Printf("Bucket: %s", *bucket.Name)
 	}
 }
 

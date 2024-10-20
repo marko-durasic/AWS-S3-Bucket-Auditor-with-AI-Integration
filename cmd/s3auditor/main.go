@@ -140,7 +140,7 @@ func auditBucket(cfg aws.Config, s3Client *s3.Client, macieClient *macie2.Client
 		bucketInfo.Region = region
 
 		// Check if bucket is public
-		public, err := isBucketPublic(s3Client, bucketName)
+		public, err := awsutils.IsBucketPublic(s3Client, bucketName)
 		if err != nil {
 			color.Red("Error: Unable to check public access for bucket %s: %v", bucketName, err)
 			log.Printf("Error: Unable to check public access for bucket %s: %v", bucketName, err)
@@ -180,39 +180,6 @@ func auditBucket(cfg aws.Config, s3Client *s3.Client, macieClient *macie2.Client
 	}(selectedBucket)
 
 	wg.Wait()
-}
-
-// isBucketPublic checks if the bucket is publicly accessible
-func isBucketPublic(s3Client *s3.Client, bucketName string) (bool, error) {
-	// Check Public Access Block configuration
-	pabOutput, err := s3Client.GetPublicAccessBlock(context.Background(), &s3.GetPublicAccessBlockInput{
-		Bucket: aws.String(bucketName),
-	})
-	if err == nil {
-		config := pabOutput.PublicAccessBlockConfiguration
-		if config != nil && *config.BlockPublicAcls && *config.BlockPublicPolicy && *config.IgnorePublicAcls && *config.RestrictPublicBuckets {
-			return false, nil
-		}
-	}
-
-	// Check bucket ACL
-	aclOutput, err := s3Client.GetBucketAcl(context.Background(), &s3.GetBucketAclInput{
-		Bucket: aws.String(bucketName),
-	})
-	if err != nil {
-		return false, err
-	}
-
-	for _, grant := range aclOutput.Grants {
-		if grant.Grantee != nil && grant.Grantee.URI != nil {
-			if *grant.Grantee.URI == "http://acs.amazonaws.com/groups/global/AllUsers" ||
-				*grant.Grantee.URI == "http://acs.amazonaws.com/groups/global/AuthenticatedUsers" {
-				return true, nil
-			}
-		}
-	}
-
-	return false, nil
 }
 
 // getBucketEncryption checks if server-side encryption is enabled

@@ -1,10 +1,17 @@
 #!/bin/bash
 
+# working dir same as script's dir not where the script is executed from
+cd $(dirname $0)
+
+# temp dir for temporary files in the same folder as the script
+TEMP_DIR=temp
+mkdir -p $TEMP_DIR
+
 REGION="us-east-1"  # Specify your desired region here
 BUCKET_NAME_1="non-sensitive-data-bucket"
 BUCKET_NAME_2="sens-data-bucket"
-TEST_FILE_1="non-sensitive.txt"
-TEST_FILE_2="sensitive.txt"
+TEST_FILE_1=$TEMP_DIR/"non-sensitive.txt"
+TEST_FILE_2=$TEMP_DIR/"sensitive.txt"
 
 # Function to create a bucket and upload data
 create_bucket_and_upload_data() {
@@ -43,9 +50,14 @@ Security code: 912
 
 "
 
+# working dir is project root dir
+cd ../../
 echo "Running the S3 Bucket Auditor tool..."
 go build -o s3auditor cmd/s3auditor/main.go || { echo "Go build failed!"; exit 1; }
 ./s3auditor || { echo "S3 Auditor tool failed!"; exit 1; }
+
+# go back to script's dir
+cd $(dirname $0)
 
 # Step 4: Clean up the test S3 buckets and files
 echo "Cleaning up test S3 buckets and files..."

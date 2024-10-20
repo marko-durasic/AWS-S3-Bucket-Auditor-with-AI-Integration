@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/fatih/color"
 )
@@ -29,4 +30,20 @@ func ListBuckets(s3Client *s3.Client) {
 		color.Green("Bucket: %s", *bucket.Name)
 		log.Printf("Bucket: %s", *bucket.Name)
 	}
+}
+
+// GetBucketRegion retrieves the region of the specified S3 bucket
+func GetBucketRegion(s3Client *s3.Client, bucketName string) (string, error) {
+	locOutput, err := s3Client.GetBucketLocation(context.Background(), &s3.GetBucketLocationInput{
+		Bucket: aws.String(bucketName),
+	})
+	if err != nil {
+		return "", err
+	}
+
+	region := string(locOutput.LocationConstraint)
+	if region == "" {
+		region = "us-east-1"
+	}
+	return region, nil
 }

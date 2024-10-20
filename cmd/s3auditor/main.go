@@ -131,7 +131,7 @@ func auditBucket(cfg aws.Config, s3Client *s3.Client, macieClient *macie2.Client
 		log.Printf("Auditing bucket: %s", bucketName)
 
 		// Get bucket region
-		region, err := getBucketRegion(s3Client, bucketName)
+		region, err := awsutils.GetBucketRegion(s3Client, bucketName)
 		if err != nil {
 			color.Red("Error: Unable to get region for bucket %s: %v", bucketName, err)
 			log.Printf("Error: Unable to get region for bucket %s: %v", bucketName, err)
@@ -180,25 +180,6 @@ func auditBucket(cfg aws.Config, s3Client *s3.Client, macieClient *macie2.Client
 	}(selectedBucket)
 
 	wg.Wait()
-}
-
-// The rest of your functions like `getBucketRegion`, `isBucketPublic`, `getBucketEncryption`, etc., remain the same.
-// Just add logging similarly as we did above for error tracking and auditing.
-
-// getBucketRegion retrieves the region of the bucket
-func getBucketRegion(s3Client *s3.Client, bucketName string) (string, error) {
-	locOutput, err := s3Client.GetBucketLocation(context.Background(), &s3.GetBucketLocationInput{
-		Bucket: aws.String(bucketName),
-	})
-	if err != nil {
-		return "", err
-	}
-
-	region := string(locOutput.LocationConstraint)
-	if region == "" {
-		region = "us-east-1"
-	}
-	return region, nil
 }
 
 // isBucketPublic checks if the bucket is publicly accessible

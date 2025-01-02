@@ -2,34 +2,32 @@ package awsutils
 
 import (
 	"context"
-	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/fatih/color"
+	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/models"
 )
 
-// ListBuckets retrieves a list of all S3 buckets
-func ListBuckets(s3Client *s3.Client) {
-	color.Cyan("\nListing S3 Buckets...\n")
-	log.Println("Listing S3 Buckets...")
-	result, err := s3Client.ListBuckets(context.Background(), &s3.ListBucketsInput{})
+// ListBuckets returns a list of bucket names and their regions
+func ListBuckets(s3Client *s3.Client) ([]models.BucketBasicInfo, error) {
+	bucketNames, err := getBucketNames(context.Background(), s3Client)
 	if err != nil {
-		color.Red("Error: Unable to list S3 buckets: %v", err)
-		log.Printf("Error: Unable to list S3 buckets: %v", err)
-		return
+		return nil, err
 	}
 
-	if len(result.Buckets) == 0 {
-		color.Yellow("No S3 buckets found.\n")
-		log.Println("No S3 buckets found.")
-		return
+	buckets := make([]models.BucketBasicInfo, len(bucketNames))
+	for i, name := range bucketNames {
+		region, err := GetBucketRegion(s3Client, name)
+		if err != nil {
+			region = "unknown"
+		}
+		buckets[i] = models.BucketBasicInfo{
+			Name:   name,
+			Region: region,
+		}
 	}
 
-	for _, bucket := range result.Buckets {
-		color.Green("Bucket: %s", *bucket.Name)
-		log.Printf("Bucket: %s", *bucket.Name)
-	}
+	return buckets, nil
 }
 
 // GetBucketRegion retrieves the region of the specified S3 bucket
@@ -79,4 +77,50 @@ func IsBucketPublic(s3Client *s3.Client, bucketName string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+// GetBucketEncryption checks if server-side encryption is enabled
+func GetBucketEncryption(s3Client *s3.Client, bucketName string) (string, error) {
+	encryptionOutput, err := s3Client.GetBucketEncryption(context.Background(), &s3.GetBucketEncryptionInput{
+		Bucket: aws.String(bucketName),
+	})
+	if err != nil {
+		return "Not Enabled", err
+	}
+
+	if len(encryptionOutput.ServerSideEncryptionConfiguration.Rules) > 0 {
+		return string(encryptionOutput.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm), nil
+	}
+
+	return "Not Enabled", nil
+}
+
+// GetBucketVersioning checks if versioning is enabled
+func GetBucketVersioning(s3Client *s3.Client, bucketName string) (string, error) {
+	versioningOutput, err := s3Client.GetBucketVersioning(context.Background(), &s3.GetBucketVersioningInput{
+		Bucket: aws.String(bucketName),
+	})
+	if err != nil {
+		return "Unknown", err
+	}
+
+	if versioningOutput.Status == "Enabled" {
+		return "Enabled", nil
+	}
+
+	return "Disabled", nil
+}
+
+// GetBucketNames returns a slice of bucket names
+func getBucketNames(ctx context.Context, s3Client *s3.Client) ([]string, error) {
+	result, err := s3Client.ListBuckets(ctx, &s3.ListBucketsInput{})
+	if err != nil {
+		return nil, err
+	}
+
+	bucketNames := make([]string, len(result.Buckets))
+	for i, bucket := range result.Buckets {
+		bucketNames[i] = *bucket.Name
+	}
+	return bucketNames, nil
 }

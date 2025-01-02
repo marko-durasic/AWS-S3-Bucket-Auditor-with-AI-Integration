@@ -1,6 +1,12 @@
 package models
 
-// BucketInfo holds information about an S3 bucket
+import "time"
+
+type BucketBasicInfo struct {
+	Name   string
+	Region string
+}
+
 type BucketInfo struct {
 	Name             string
 	Region           string
@@ -8,4 +14,5 @@ type BucketInfo struct {
 	Encryption       string
 	VersioningStatus string
 	SensitiveData    bool
+	AuditDuration    time.Duration
 }

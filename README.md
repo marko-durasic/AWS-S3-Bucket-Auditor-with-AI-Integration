@@ -249,5 +249,4 @@ Feel free to customize and extend the tool:
 - Additional screenshots:
   - [Bucket Details](docs/images/other/Bucket_Details.png)
   - [Bucket List](docs/images/other/Bucket_List.png)
-  - [Demo Screenshot](docs/images/other/Demo_Screenshot.png)
   

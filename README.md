@@ -1,7 +1,11 @@
 # AWS S3 Bucket Auditor with AI Integration
+
 The **AWS S3 Bucket Auditor** is a Go-based command-line tool that performs a comprehensive security audit of your Amazon S3 buckets. It integrates with AWS Macie to check for sensitive data, providing intelligent insights while ensuring data privacy and security.
 
-![Demo Screenshot](docs/images/Demo_Screenshot.png)
+![Main Menu](docs/images/Main_Menu.png)
+![Audit Bucket](docs/images/Bucket_audit_List.png)
+![In Progress](docs/images/In_Progress_Screenshot.png)
+![Audit Bucket Summary](docs/images/report.png)
 
 ## Features
 
@@ -68,6 +72,7 @@ Ensure that your AWS credentials are properly configured. The AWS SDK for Go wil
     aws_access_key_id = YOUR_ACCESS_KEY_ID
     aws_secret_access_key = YOUR_SECRET_ACCESS_KEY
     ```
+
 3. **Shared Configuration File (~/.aws/config):**
 
     You can also set the default region in the configuration file.
@@ -115,6 +120,7 @@ Ensure the S3 bucket used by Macie for storing findings has the following policy
     ]
 }
 ```
+
 ### KMS Policy for Findings Bucket Encryption
 
 Ensure the KMS key used for encrypting Macie findings has the following policy:
@@ -145,6 +151,7 @@ Ensure the KMS key used for encrypting Macie findings has the following policy:
 ```
 
 ### Permissions
+
 The tool requires the following AWS IAM permissions:
 
 - S3: ListBuckets, GetBucketLocation, GetBucketAcl, GetBucketEncryption, GetBucketVersioning, GetPublicAccessBlock
@@ -189,12 +196,11 @@ Sensitive Data   : true
 
 If you find this tool useful and would like to support further development, you can:
 
-
 [![Buy Me a Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=techmarko&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/techmarko)
 
 Your support is greatly appreciated!
 
-## 📫 How to reach me:
+## 📫 How to reach me
 
   [![Email](https://img.shields.io/badge/Email-ddjura87@gmail.com-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:ddjura87@gmail.com)
   [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/markodurasic/)
@@ -240,6 +246,8 @@ Feel free to customize and extend the tool:
 
 ## Additional Information
 
-- In progress screenshot:
+- Additional screenshots:
+  - [Bucket Details](docs/images/other/Bucket_Details.png)
+  - [Bucket List](docs/images/other/Bucket_List.png)
+  - [Demo Screenshot](docs/images/other/Demo_Screenshot.png)
   
-![In Progress Screenshot](docs/images/In_Progress_Screenshot.png)

@@ -270,4 +270,16 @@ go test ./test/integration/... -v -short
 
 ### All Tests
 To run all tests:
+```bash
+# Run all tests (including integration tests)
+go test ./... -v -timeout 30m
+
+# Run all tests except integration tests
+go test ./... -v -short
 ```
+
+Note: Running all tests includes integration tests which:
+- Require valid AWS credentials
+- Can take 15-30 minutes to complete
+- Will create and delete test resources in your AWS account
+- May incur AWS costs (especially from Macie)

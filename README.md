@@ -249,4 +249,25 @@ Feel free to customize and extend the tool:
 - Additional screenshots:
   - [Bucket Details](docs/images/other/Bucket_Details.png)
   - [Bucket List](docs/images/other/Bucket_List.png)
-  
+
+## Testing
+
+### Unit Tests
+To run only unit tests:
+```bash
+go test ./internal/... -v
+```
+
+### Integration Tests
+Note: Integration tests can take 15-30 minutes to complete due to Macie classification jobs. Use the -short flag to skip long-running tests:
+```bash
+# Run with extended timeout
+./tests/scripts/run_integration_tests.sh
+
+# Skip long-running tests
+go test ./test/integration/... -v -short
+```
+
+### All Tests
+To run all tests:
+```

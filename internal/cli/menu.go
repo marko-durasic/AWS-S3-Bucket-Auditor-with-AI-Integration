@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/macie2"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/manifoldco/promptui"
 	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/audit"
 	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/awsutils"
@@ -26,7 +27,8 @@ func HandleBucketAudit(cfg aws.Config, s3Client *s3.Client, macieClient *macie2.
 		return
 	}
 
-	scanner := audit.NewScanner(cfg, s3Client, macieClient)
+	stsClient := sts.NewFromConfig(cfg)
+	scanner := audit.NewScanner(cfg, s3Client, macieClient, stsClient)
 	scanner.AuditBucket(bucketName)
 }
 

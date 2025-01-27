@@ -10,29 +10,31 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/macie2"
 	"github.com/aws/aws-sdk-go-v2/service/macie2/types"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/fatih/color"
 	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/awsutils"
+	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/config"
 	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/models"
 	"github.com/schollz/progressbar/v3"
 )
 
 type Scanner struct {
 	cfg         aws.Config
-	s3Client    *s3.Client
-	macieClient *macie2.Client
+	s3Client    awsutils.S3ClientAPI
+	macieClient awsutils.MacieClientAPI
+	stsClient   awsutils.STSClientAPI
 }
 
-func NewScanner(cfg aws.Config, s3Client *s3.Client, macieClient *macie2.Client) *Scanner {
+func NewScanner(cfg aws.Config, s3Client awsutils.S3ClientAPI, macieClient awsutils.MacieClientAPI, stsClient awsutils.STSClientAPI) *Scanner {
 	return &Scanner{
 		cfg:         cfg,
 		s3Client:    s3Client,
 		macieClient: macieClient,
+		stsClient:   stsClient,
 	}
 }
 
-func (s *Scanner) AuditBucket(bucketName string) {
+func (s *Scanner) AuditBucket(bucketName string) error {
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 	startTime := time.Now()
@@ -93,14 +95,12 @@ func (s *Scanner) AuditBucket(bucketName string) {
 	}(bucketName)
 
 	wg.Wait()
+	return nil
 }
 
 func (s *Scanner) checkSensitiveData(bucketName string) (bool, error) {
-	// [existing checkSensitiveData implementation, but using s.cfg, s.macieClient]
-	// ...
 	// Retrieve AWS Account ID
-	stsClient := sts.NewFromConfig(s.cfg)
-	identity, err := stsClient.GetCallerIdentity(context.Background(), &sts.GetCallerIdentityInput{})
+	identity, err := s.stsClient.GetCallerIdentity(context.Background(), &sts.GetCallerIdentityInput{})
 	if err != nil {
 		log.Printf("Error: failed to retrieve account ID: %v", err)
 		return false, fmt.Errorf("Error: failed to retrieve account ID: %w", err)
@@ -134,8 +134,8 @@ func (s *Scanner) checkSensitiveData(bucketName string) (bool, error) {
 	color.Yellow("🔍 Macie classification job created with Job ID: %s\n", jobID)
 	log.Printf("Macie classification job created with Job ID: %s", jobID)
 
-	// Set a timeout for the polling loop (e.g., 40 minutes)
-	timeout := time.After(40 * time.Minute)
+	// Set a timeout for the polling loop
+	timeout := time.After(config.GetMacieTimeout())
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
 

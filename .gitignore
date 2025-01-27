@@ -24,3 +24,5 @@ Thumbs.db
 
 # Don't ignore docs folder
 !docs/
+
+.env

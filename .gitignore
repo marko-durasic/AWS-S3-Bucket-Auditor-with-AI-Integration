@@ -5,6 +5,7 @@
 *
 !*.*
 !*/
+!.github/**
 
 # Don't ignore go.mod and go.sum
 !go.mod

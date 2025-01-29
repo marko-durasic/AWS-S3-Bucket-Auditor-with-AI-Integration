@@ -1,0 +1,18 @@
+# These owners will be the default owners for everything in
+# the repo. They will be requested for review when someone
+# opens a pull request.
+
+# Syntax:
+# path/to/file/or/directory    @username-or-team
+
+# Examples:
+# All files in the repo
+*       @marko-durasic
+
+# Specific directories
+/cmd/*           @marko-durasic
+/internal/*      @marko-durasic
+/test/*          @marko-durasic
+
+# Specific file types
+*.go             @marko-durasic

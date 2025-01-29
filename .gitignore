@@ -27,3 +27,6 @@ Thumbs.db
 !docs/
 
 .env
+
+# Ignore AWS policy files
+*-policy.json

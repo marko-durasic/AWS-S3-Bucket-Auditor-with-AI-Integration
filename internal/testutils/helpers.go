@@ -11,6 +11,7 @@ import (
 )
 
 // CreateTestBucket creates a bucket for testing and returns a cleanup function
+// The cleanup function ensures all resources are properly deleted
 func CreateTestBucket(t *testing.T, s3Client *s3.Client, bucketName string) func() {
 	t.Helper()
 

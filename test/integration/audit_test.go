@@ -13,6 +13,7 @@ import (
 	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/config"
 	"github.com/marko-durasic/aws-s3-bucket-auditor/internal/testutils"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMain(m *testing.M) {
@@ -94,9 +95,9 @@ func TestAuditFlow(t *testing.T) {
 			err := scanner.AuditBucket(bucketName)
 
 			if tt.wantErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err, "AuditBucket should not return error")
 			}
 		})
 	}

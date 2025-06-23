@@ -2,8 +2,10 @@
 
 ## AWS S3 Bucket Auditor with Macie Integration
 
-
 ### Steps to Continue
+
+- add more AIs from sagemaker or bedrock from AWS... or other, don;t know, runed locally (but then how do you dump the content of s3, ) or ran in other service.. or train my own model with base model and reinforcemnt learnin clear reward function, the model can start thinking for it self...(also it can be thinking reasoning model.)
+
 - also have a non gui version of it, so you can just run it from command line with some flags
 - when choosing audit a bucket, we should have option to audit few of them, not just one, and to search by letter, what if there is many buckets
 - add check if the bucket logging is enabled
@@ -12,6 +14,7 @@
 - dockerize it
 - not everything in on main.go, split it into different files
 - also besides saying it has sensitive data, we should give more info, maybe able to enter into each result
+
 1. **Verify the S3 Bucket Auditor**:
    - Add more test cases for the auditor to handle different bucket configurations (e.g., public vs. private buckets, buckets with different encryption types).
    - Refactor the Go tool to improve error handling and logging, especially for longer-running Macie jobs.
@@ -46,10 +49,12 @@
    - Log sensitive actions and generate an audit trail for review.
 
 ### Notes
+
 - **Current Job Status**: Confirmed that the Macie jobs were successfully canceled, and test buckets were removed.
 - **Bucket Management**: Test buckets used (`non-sensitive-data-bucket`) were successfully deleted.
 
 ### Commands for Reference
+
 - **List Macie Jobs**: `aws macie2 list-classification-jobs --query 'items[*].[jobId, jobStatus]' --output table --region <your-region>`
 - **Cancel Macie Job**: `aws macie2 update-classification-job --job-id <job-id> --job-status CANCELLED --region <your-region>`
 - **Delete S3 Bucket**: `aws s3 rb s3://<bucket-name> --force --region <your-region>`
@@ -57,4 +62,4 @@
 
 ---
 
-_Last updated on: 2024-09-15_
+_Last updated on: 2025-06-23_

@@ -150,7 +150,8 @@ func (s *Scanner) checkSensitiveData(bucketName string) (bool, error) {
 	)
 
 	// Poll for job completion
-	for {
+	jobDone := false
+	for !jobDone {
 		select {
 		case <-timeout:
 			return false, fmt.Errorf("timeout waiting for Macie classification job completion")
@@ -172,15 +173,13 @@ func (s *Scanner) checkSensitiveData(bucketName string) (bool, error) {
 			// Check if job is complete
 			if describeJobOutput.JobStatus == types.JobStatusComplete {
 				_ = bar.Finish()
-				break
+				jobDone = true
 			} else if describeJobOutput.JobStatus == types.JobStatusUserPaused ||
 				describeJobOutput.JobStatus == types.JobStatusCancelled ||
 				describeJobOutput.JobStatus == types.JobStatusPaused {
 				return false, fmt.Errorf("Macie classification job failed")
 			}
-			continue
 		}
-		break
 	}
 
 	// List findings after the job completes using FindingCriteria

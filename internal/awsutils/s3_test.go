@@ -215,6 +215,25 @@ func TestIsBucketPublic(t *testing.T) {
 			expectedValue: true,
 			expectError:   false,
 		},
+		{
+			name:       "Bucket with incomplete public access block",
+			bucketName: "partial-block-bucket",
+			mockSetup: func(m *mockS3Client) {
+				m.On("GetPublicAccessBlock", mock.Anything, mock.Anything).Return(
+					&s3.GetPublicAccessBlockOutput{
+						PublicAccessBlockConfiguration: &types.PublicAccessBlockConfiguration{
+							BlockPublicAcls: aws.Bool(true),
+							// BlockPublicPolicy missing
+							IgnorePublicAcls:      aws.Bool(true),
+							RestrictPublicBuckets: aws.Bool(true),
+						},
+					}, nil)
+				m.On("GetBucketAcl", mock.Anything, mock.Anything).Return(
+					&s3.GetBucketAclOutput{}, nil)
+			},
+			expectedValue: false,
+			expectError:   false,
+		},
 	}
 
 	for _, tt := range tests {

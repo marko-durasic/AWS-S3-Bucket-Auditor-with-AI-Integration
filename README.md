@@ -164,7 +164,7 @@ The tool requires the following AWS IAM permissions:
 Build the application:
 
 ```bash
-go build -o s3auditor main.go
+go build -o s3auditor cmd/s3auditor/main.go
 ```
 
 Run the application:

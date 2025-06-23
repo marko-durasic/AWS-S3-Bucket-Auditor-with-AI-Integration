@@ -114,5 +114,7 @@ func displayBucketDetails(s3Client *s3.Client, bucket models.BucketBasicInfo) {
 
 	// Wait for user input before returning to list
 	fmt.Print("\nPress Enter to return to bucket list...")
-	fmt.Scanln()
+	if _, err := fmt.Scanln(); err != nil {
+		log.Printf("Error reading input: %v", err)
+	}
 }

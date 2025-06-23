@@ -29,7 +29,9 @@ func HandleBucketAudit(cfg aws.Config, s3Client *s3.Client, macieClient *macie2.
 
 	stsClient := sts.NewFromConfig(cfg)
 	scanner := audit.NewScanner(cfg, s3Client, macieClient, stsClient)
-	scanner.AuditBucket(bucketName)
+	if err := scanner.AuditBucket(bucketName); err != nil {
+		log.Printf("Audit error: %v", err)
+	}
 }
 
 func PromptForBucketSelection(s3Client *s3.Client) (string, error) {

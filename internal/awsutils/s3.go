@@ -64,7 +64,11 @@ func IsBucketPublic(s3Client S3ClientAPI, bucketName string) (bool, error) {
 	})
 	if err == nil {
 		config := pabOutput.PublicAccessBlockConfiguration
-		if config != nil && *config.BlockPublicAcls && *config.BlockPublicPolicy && *config.IgnorePublicAcls && *config.RestrictPublicBuckets {
+		if config != nil &&
+			aws.ToBool(config.BlockPublicAcls) &&
+			aws.ToBool(config.BlockPublicPolicy) &&
+			aws.ToBool(config.IgnorePublicAcls) &&
+			aws.ToBool(config.RestrictPublicBuckets) {
 			return false, nil
 		}
 	}

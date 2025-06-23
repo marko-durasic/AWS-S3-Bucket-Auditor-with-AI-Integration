@@ -8,7 +8,7 @@
 - when choosing audit a bucket, we should have option to audit few of them, not just one, and to search by letter, what if there is many buckets
 - add check if the bucket logging is enabled
 - acl and or policy is public.. see if you are already doing that
-- so I have few checks, I should be able to select which ones I want to do (especially because Marcie o)
+ - so I have few checks, I should be able to select which ones I want to do (especially because Macie o)
 - dockerize it
 - not everything in on main.go, split it into different files
 - also besides saying it has sensitive data, we should give more info, maybe able to enter into each result

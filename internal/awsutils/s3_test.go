@@ -215,6 +215,22 @@ func TestIsBucketPublic(t *testing.T) {
 			expectedValue: true,
 			expectError:   false,
 		},
+		{
+			name:       "Bucket with nil public access config",
+			bucketName: "partial-config-bucket",
+			mockSetup: func(m *mockS3Client) {
+				m.On("GetPublicAccessBlock", mock.Anything, mock.Anything).Return(
+					&s3.GetPublicAccessBlockOutput{
+						PublicAccessBlockConfiguration: &types.PublicAccessBlockConfiguration{},
+					}, nil)
+				m.On("GetBucketAcl", mock.Anything, mock.Anything).Return(
+					&s3.GetBucketAclOutput{
+						Grants: []types.Grant{},
+					}, nil)
+			},
+			expectedValue: false,
+			expectError:   false,
+		},
 	}
 
 	for _, tt := range tests {

@@ -2,6 +2,8 @@
 
 The **AWS S3 Bucket Auditor** is a Go-based command-line tool that performs a comprehensive security audit of your Amazon S3 buckets. It integrates with AWS Macie to check for sensitive data, providing intelligent insights while ensuring data privacy and security.
 
+For a short overview of the repository structure, see [docs/EXPLAIN.md](docs/EXPLAIN.md).
+
 ![Main Menu](docs/images/Main_Menu.png)
 ![Audit Bucket](docs/images/Bucket_audit_List.png)
 ![In Progress](docs/images/In_Progress_Screenshot.png)
